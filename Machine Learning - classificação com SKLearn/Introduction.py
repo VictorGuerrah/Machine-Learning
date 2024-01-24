@@ -7,6 +7,11 @@ model = LinearSVC(dual=True)
 # 1 => aumentar
 # 0 => parar
 #Casos em que devo aumentar o tempo de campanha:
+
+# meu dinheiro da para expandir a campanha ou é limitado?
+# meu publico alvo ta numa crescente ou decrescente?
+# minha frequencia está saudavel?
+
 c1 = [1, 1, 1]
 c2 = [1, 0, 1]
 c3 = [0, 1, 1]
