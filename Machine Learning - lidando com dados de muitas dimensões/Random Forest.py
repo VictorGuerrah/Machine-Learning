@@ -1,10 +1,9 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.dummy import DummyClassifier
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_selection import RFECV
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-from sklearn.pipeline import Pipeline
 from imblearn.over_sampling import SMOTE
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
@@ -42,19 +41,13 @@ else:
 
 model = RandomForestClassifier(n_estimators=100)
 
-pipeline = Pipeline([
-    ('scaler', StandardScaler()),
-    ('rfecv', RFECV(estimator=model, cv=5, scoring='accuracy', step=1))
-])
-
-scaler = StandardScaler()
+scaler = MinMaxScaler()
 X_train_scaled = scaler.fit_transform(X_train_smote)
 X_test_scaled = scaler.transform(X_test)
 
 model = RandomForestClassifier(n_estimators=100)
 rfecv = RFECV(estimator=model, cv=5, scoring='accuracy', step=1)
 rfecv.fit(X_train_scaled, y_train_smote)
-
 X_rfecv_train = rfecv.transform(X_train_scaled)
 X_rfecv_test = rfecv.transform(X_test_scaled)
 
@@ -76,7 +69,7 @@ print("Relatório de Classificação:\n", classification_rpt)
 print(f"Acurácia da baseline: {dummy_score}")
 
 tsne = TSNE(n_components = 2)
-X_test_scaled = tsne.fit_transform(X_test_scaled)
+X_test_tsne = tsne.fit_transform(X_rfecv_test)
 plt.figure(figsize=(14,8))
-sns.scatterplot(x = X_test_scaled[:,0] , y = X_test_scaled[:,1], hue = y_test)
+sns.scatterplot(x=X_test_tsne[:, 0], y=X_test_tsne[:, 1], hue=y_test)
 plt.show()
